@@ -84,6 +84,7 @@ emailposarr = []
 bcryptarr = []
 md5arr = []
 sha256arr = []
+ipaddrarr = []
 usernamearr = []
 import re
 
@@ -113,7 +114,7 @@ for enumc, arr in enumerate(narr):
        continue
      if re.match(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", v):
        print("\33[34m[DBParser] \u001b[32mIP address detected -> \33[31m" + v)
-       sha256arr.append(c)
+       ipaddrarr.append(c)
        continue
      gchars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
      wordtocheck = v
@@ -131,3 +132,61 @@ for enumc, arr in enumerate(narr):
            pass
    if enumc == 250:
      break 
+
+if emailposarr != []:
+  emailpos = mode(emailposarr)
+  print("\33[34m[DBParser] \u001b[32mE-Mail Position -> \33[31m" + str(emailpos))
+if bcryptarr != []:
+  bcryptpos = mode(bcryptarr)
+  print("\33[34m[DBParser] \u001b[32mBCrypt Position -> \33[31m" + str(bcryptpos))
+if md5arr != []:
+  md5pos = mode(md5arr)
+  print("\33[34m[DBParser] \u001b[32mMD5 Position -> \33[31m" + str(md5pos))
+if sha256arr != []:
+  sha256pos = mode(sha256arr)
+  print("\33[34m[DBParser] \u001b[32mSHA256 Position -> \33[31m" + str(sha256pos))
+if usernamearr != []:
+  usernamepos = mode(usernamearr)
+  print("\33[34m[DBParser] \u001b[32mUsername Position -> \33[31m" + str(usernamepos))
+if ipaddrarr != []:
+  ipaddrpos = mode(ipaddrarr)
+  print("\33[34m[DBParser] \u001b[32mIPAddr Position -> \33[31m" + str(ipaddrpos))
+
+print("\33[34m[DBParser] \u001b[32mStarted opening \33[31m" + str(fp))
+
+#USER:EMAIL:HASH:IP
+with open(fp, "r") as f:
+  with open("out.txt", "a+") as f2:
+    for line in f:
+      l = line.strip("\n")
+      splitted = l.split(splitcount)
+      if len(ipaddrarr) > 0:
+        if usernamearr != []:
+          if bcryptarr != []:
+            str2write = "{}:{}:{}:{}".format(splitted[usernamepos], splitted[emailpos], splitted[bcryptpos], splitted[ipaddrpos])
+          if md5arr != []:
+            str2write = "{}:{}:{}:{}".format(splitted[usernamepos], splitted[emailpos], splitted[md5pos], splitted[ipaddrpos])
+          if sha256arr != []:
+            str2write = "{}:{}:{}:{}".format(splitted[usernamepos], splitted[emailpos], splitted[sha256pos], splitted[ipaddrpos])
+        else:
+          if bcryptarr != []:
+            str2write = "{}:{}:{}".format(splitted[emailpos], splitted[bcryptpos], splitted[ipaddrpos])
+          if md5arr != []:
+            str2write = "{}:{}:{}".format(splitted[emailpos], splitted[md5pos], splitted[ipaddrpos])
+          if sha256arr != []:
+            str2write = "{}:{}:{}".format(splitted[emailpos], splitted[sha256pos], splitted[ipaddrpos])
+      else:
+        if usernamearr != []:
+          if bcryptarr != []:
+            str2write = "{}:{}:{}".format(splitted[usernamepos], splitted[emailpos], splitted[bcryptpos])
+          if md5arr != []:
+            str2write = "{}:{}:{}".format(splitted[usernamepos], splitted[emailpos], splitted[md5pos])
+          if sha256arr != []:
+            str2write = "{}:{}:{}".format(splitted[usernamepos], splitted[emailpos], splitted[sha256pos])
+        else:
+          if bcryptarr != []:
+            str2write = "{}:{}".format(splitted[emailpos], splitted[bcryptpos])
+          if md5arr != []:
+            str2write = "{}:{}".format(splitted[emailpos], splitted[md5pos])
+          if sha256arr != []:
+            str2write = "{}:{}".format(splitted[emailpos], splitted[sha256pos])
